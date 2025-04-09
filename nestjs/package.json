@@ -1,0 +1,23 @@
+{
+  "name": "nestjs-zeit-server",
+  "version": "1.0.0",
+  "description": "Ein NestJS-Server, der die aktuelle Uhrzeit ausgibt",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch"
+  },
+  "dependencies": {
+    "@nestjs/common": "^8.0.0",
+    "@nestjs/core": "^8.0.0",
+    "@nestjs/platform-express": "^8.0.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.2.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^8.0.0",
+    "@types/node": "^16.0.0",
+    "typescript": "^4.3.5"
+  }
+}
