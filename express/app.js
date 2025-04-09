@@ -4,11 +4,14 @@ const app = express();
 const port = 3000;
 
 // Handlebars als View-Engine einrichten
-app.engine('handlebars', exphbs());
+app.engine('handlebars', exphbs({
+  defaultLayout: 'main',
+  layoutsDir: __dirname + '/views/layouts/'
+}));
 app.set('view engine', 'handlebars');
 
 // Verzeichnis für die Views festlegen
-app.set('views', './views');
+app.set('views', __dirname + '/views');
 
 app.get('/time', (req, res) => {
   const currentTime = new Date().toLocaleTimeString('de-DE');
