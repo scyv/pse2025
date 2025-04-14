@@ -4,12 +4,12 @@
     "nodejs@latest",
     "go@latest",
     "jdk@23",
+    "maven@latest",
   ],
   "shell": {
     "init_hook": [
       "echo 'Welcome to devbox!' > /dev/null",
     ],
-    "scripts": {
-    }
-  }
+    "scripts": {},
+  },
 }

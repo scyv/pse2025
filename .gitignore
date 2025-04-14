@@ -1,0 +1,5 @@
+.aider*
+
+express/node_modules
+nestjs/node_modules
+superapp/node_modules

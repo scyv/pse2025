@@ -80,6 +80,54 @@
         }
       }
     },
+    "maven@latest": {
+      "last_modified": "2025-03-11T17:52:14Z",
+      "resolved": "github:NixOS/nixpkgs/0d534853a55b5d02a4ababa1d71921ce8f0aee4c#maven",
+      "source": "devbox-search",
+      "version": "3.9.9",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/v73qgp24ds2v8j405jpf2v55hy6m8hp8-maven-3.9.9",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/v73qgp24ds2v8j405jpf2v55hy6m8hp8-maven-3.9.9"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4n0s9nsm6l821qi17s96bz3zxy0f88ik-maven-3.9.9",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/4n0s9nsm6l821qi17s96bz3zxy0f88ik-maven-3.9.9"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/5i1a0akwgvkma22fgi5p5lvgqi25xqbz-maven-3.9.9",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/5i1a0akwgvkma22fgi5p5lvgqi25xqbz-maven-3.9.9"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/aj031scg0r8jxklz2j2ihyys31ydzcd2-maven-3.9.9",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/aj031scg0r8jxklz2j2ihyys31ydzcd2-maven-3.9.9"
+        }
+      }
+    },
     "nodejs@latest": {
       "last_modified": "2025-03-16T16:17:41Z",
       "plugin_version": "0.0.2",
