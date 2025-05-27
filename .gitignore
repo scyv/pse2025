@@ -3,3 +3,5 @@
 express/node_modules
 nestjs/node_modules
 superapp/node_modules
+mqttGame/node_modules
+ws/node_modules

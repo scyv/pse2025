@@ -1,0 +1,13 @@
+{
+  "name": "mqttgame",
+  "version": "1.0.0",
+  "description": "Ein MQTT Game",
+  "type": "module",
+  "module": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "mqtt": "5.13.0"
+  }
+}

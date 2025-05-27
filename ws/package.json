@@ -1,0 +1,13 @@
+{
+  "name": "ws-example",
+  "version": "1.0.0",
+  "description": "Ein Ws Exampple",
+  "type": "module",
+  "module": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "ws": "8.18.2"
+  }
+}
