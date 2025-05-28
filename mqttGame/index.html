@@ -2,28 +2,188 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>MQTT Game</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.10.4/mqtt.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
 </head>
 <body>
-<div id="container"></div>
+<main class="container">
+    <div class="screen state-waiting">
+        <article aria-busy="true"></article>
+        <input
+                onclick="stopGame();"
+                type="button"
+                value="Stop Game"
+        />
+    </div>
+    <div class="screen state-prepare">
+        <h1>The MQTT Game</h1>
+        <form>
+            <fieldset>
+                <label>
+                    Name
+                    <input
+                            name="name"
+                            placeholder="Name"
+                            autocomplete="given-name"
+                    />
+                </label>
+                <label>
+                    Group ID
+                    <input
+                            type="text"
+                            name="groupId"
+                            placeholder="Group ID"
+                    />
+                </label>
+            </fieldset>
+
+            <input
+                    onclick="joinGame();"
+                    type="button"
+                    value="Join Game"
+            />
+        </form>
+    </div>
+    <div class="screen state-lobby">
+        <h1>Spieler</h1>
+        <article>
+            <ul id="playerList"></ul>
+        </article>
+    </div>
+    <div class="screen state-running">
+        <article>
+            <h1 id="question"></h1>
+            <ul id="answerList"></ul>
+            <p id="previousAnswer"></p>
+        </article>
+        <article>
+            <h1>Leaderboard</h1>
+            <ul id="leaders"></ul>
+        </article>
+        <input
+                onclick="stopGame();"
+                type="button"
+                value="Stop Game"
+        />
+    </div>
+
+</main>
 <script>
     const client = mqtt.connect('wss://test.mosquitto.org:8081');
+
+    let connected = false;
+    let gameState = "prepare";
+    let users = [];
+    let question = undefined;
+    let leaderboard = undefined;
+    let groupId = undefined;
+    let userName = undefined;
+
     client.on("connect", () => {
-        client.subscribe("psekwh/message");
+        connected = true;
+        client.subscribe("psekwh/start");
     });
 
     client.on("message", (topic, message) => {
+        const parsedMessage = JSON.parse(message);
+        if (topic === "psekwh/question/" + groupId) {
+            gameState = "running";
+            question = parsedMessage;
+        } else if (topic === "psekwh/player_join/" + groupId) {
+            gameState = "lobby";
+            users = parsedMessage.usernames;
+        } else if (topic === "psekwh/leaderboard/" + groupId) {
+            leaderboard = parsedMessage;
+        } else if (topic === "psekwh/start") {
+            document.querySelector("[name='groupId']").value = parsedMessage.groupId;
+        }
         console.log(message.toString());
-        document.querySelector("#container").innerHTML = message.toString();
+        updateState();
     });
 
     client.on("error", (err) => {
         console.log(err);
+
     })
 
-</script>
+    client.on("disconnect", () => {
+        connected = false;
+    })
 
+    function joinGame() {
+        groupId = document.querySelector("[name='groupId']").value;
+        userName = document.querySelector("[name='name']").value;
+
+        client.publish("psekwh/join", JSON.stringify({
+            groupId: groupId,
+            username: userName
+        }));
+        gameState = "waiting";
+
+        client.subscribe("psekwh/question/" + groupId);
+        client.subscribe("psekwh/player_join/" + groupId);
+        client.subscribe("psekwh/leaderboard/" + groupId);
+        updateState();
+    }
+
+    document.querySelector("#answerList").addEventListener("click", (evt) => {
+        console.log(evt.target.dataset.key)
+
+        client.publish("psekwh/answer", JSON.stringify(
+            {
+                groupId: groupId,
+                questionId: question.id,
+                answerId: evt.target.dataset.key,
+                username: userName
+            }
+        ));
+
+        gameState = "waiting";
+        updateState();
+    });
+
+
+    function stopGame() {
+        gameState = "prepare";
+        client.reconnect();
+        updateState();
+    }
+    function updateState() {
+        document.querySelectorAll(".screen").forEach(el => {
+            el.style.display = "none";
+        });
+
+        switch (gameState) {
+            case "prepare":
+                break;
+            case "lobby":
+                document.getElementById("playerList").innerHTML = users.map(user => {
+                    return `<li>${user}</li>`
+                }).join("");
+                break;
+            case "running":
+                document.getElementById("question").textContent = question.question;
+                document.getElementById("answerList").innerHTML = Object.keys(question.answers).map(key => {
+                    return `<li data-key="${key}">${key} - ${question.answers[key]}</li>`
+                }).join("");
+
+                if (leaderboard) {
+                    document.getElementById("previousAnswer").textContent = "Vorherige Antwort: " + leaderboard.previousCorrectAnswer;
+                    document.getElementById("leaders").innerHTML = leaderboard.leaderboard.map(user => {
+                        return `<li>${user.points} - ${user.name}</li>`
+                    }).join("");
+                }
+                break;
+        }
+
+        document.querySelectorAll(".screen.state-" + gameState).forEach(el => {
+            el.style.display = "block";
+        });
+    }
+
+    updateState();
+
+</script>
 </body>
 </html>
