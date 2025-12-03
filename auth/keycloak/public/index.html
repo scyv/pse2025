@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1>KeyCloak Authentication Demo</h1>
+
+    <p>
+    <pre></pre>
+    </p>
+
+    <button style="display:none;">Logout</button>
+</body>
+
+
+<script type="module">
+
+    import Keycloak from 'https://cdn.jsdelivr.net/npm/keycloak-js@26.2.1/+esm'
+
+    const keycloak = new Keycloak({
+        "url": "http://localhost:8780/",
+        "realm": "SuperApp",
+        "clientId": "superapp"
+    });
+
+    (async () => {
+        try {
+            const authenticated = await keycloak.init();
+            if (authenticated) {
+                console.log('User is authenticated', keycloak.idTokenParsed);
+                document.querySelector("pre").textContent = JSON.stringify(keycloak.idTokenParsed, null, 4)
+
+                const logoutButton = document.querySelector("button");
+                logoutButton.textContent = "Logout " + keycloak.idTokenParsed.name;
+                logoutButton.style.display = "block";
+                logoutButton.addEventListener("click", () => {
+                    keycloak.logout();
+                    logoutButton.style.display = "none";
+                }, { once: true })
+
+            } else {
+                keycloak.login({
+                    scope: "roles"
+                });
+                console.log('User is not authenticated');
+            }
+        } catch (error) {
+            console.error('Failed to initialize adapter:', error);
+        }
+    })();
+
+</script>
+
+</html>

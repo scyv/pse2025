@@ -1,0 +1,14 @@
+{
+    "name": "cookie-example",
+    "version": "1.0.0",
+    "description": "Simple Node.js/Express COOKIE Authentication example",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "5.2.1"
+    },
+    "author": "",
+    "license": "MIT"
+}
