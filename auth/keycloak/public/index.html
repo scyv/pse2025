@@ -8,6 +8,9 @@
     <pre></pre>
     </p>
 
+    <button id="protected-btn" style="display:none;">Geschützten Endpunkt aufrufen</button>
+    <pre id="api-result"></pre>
+
     <button style="display:none;">Logout</button>
 </body>
 
@@ -29,7 +32,19 @@
                 console.log('User is authenticated', keycloak.idTokenParsed);
                 document.querySelector("pre").textContent = JSON.stringify(keycloak.idTokenParsed, null, 4)
 
-                const logoutButton = document.querySelector("button");
+                const protectedBtn = document.getElementById("protected-btn");
+                protectedBtn.style.display = "block";
+                protectedBtn.addEventListener("click", async () => {
+                    // Token ggf. auffrischen, dann Bearer-Header senden
+                    await keycloak.updateToken(10);
+                    const resp = await fetch("/api/protected", {
+                        headers: { "Authorization": "Bearer " + keycloak.token }
+                    });
+                    const data = await resp.json();
+                    document.getElementById("api-result").textContent = JSON.stringify(data, null, 4);
+                });
+
+                const logoutButton = document.querySelector("button:last-of-type");
                 logoutButton.textContent = "Logout " + keycloak.idTokenParsed.name;
                 logoutButton.style.display = "block";
                 logoutButton.addEventListener("click", () => {

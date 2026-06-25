@@ -48,10 +48,8 @@ function basicAuth(req, res, next) {
   }
 }
 
-// Middleware to serve static files
 app.use(express.static("public"));
 
-// Protected route - requires authentication
 app.get("/protected", basicAuth, (req, res) => {
   res.send(`
         <h1>Protected Area</h1>
@@ -68,22 +66,6 @@ app.get("/protected", basicAuth, (req, res) => {
     `);
 });
 
-// Another protected route
-app.get("/admin", basicAuth, (req, res) => {
-  res.send(`
-        <h1>Admin Dashboard</h1>
-        <p>Hello <strong>${req.user}</strong>!</p>
-        <p>This is a protected admin area.</p>
-        <h2>User Info:</h2>
-        <ul>
-            <li>Username: ${req.user}</li>
-            <li>Access Time: ${new Date().toISOString()}</li>
-        </ul>
-        <a href="/">Back to Home</a>
-    `);
-});
-
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
