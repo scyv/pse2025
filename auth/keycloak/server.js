@@ -6,7 +6,6 @@ const PORT = 3000;
 const KEYCLOAK_JWKS_URL =
   "http://localhost:8780/realms/SuperApp/protocol/openid-connect/certs";
 
-// JWKS-Cache: kid → CryptoKey
 const jwksCache = new Map();
 
 async function getPublicKey(kid) {
